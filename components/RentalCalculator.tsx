@@ -458,17 +458,18 @@ export default function RentalCalculator() {
             </div>
           </div>
 
-          {/* Bina Özellikleri */}
+          {/* Bina ve Daire Özellikleri */}
           <div className="card">
-            <h3 className="text-lg font-semibold mb-4">Bina Özellikleri</h3>
+            <h3 className="text-lg font-semibold mb-4">Bina ve Daire Özellikleri</h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1">Bina Yaşı</label>
+                <label className="block text-sm font-medium mb-1">Bina Yaşı (Yıl)</label>
                 <input
                   type="number"
                   className="input-field"
                   value={formData.buildingAge}
                   onChange={(e) => handleInputChange('buildingAge', Number(e.target.value))}
+                  placeholder="Örn: 5"
                 />
               </div>
               <div>
@@ -478,57 +479,62 @@ export default function RentalCalculator() {
                   value={formData.hasHeating}
                   onChange={(e) => handleInputChange('hasHeating', e.target.value)}
                 >
-                  <option value="none">Isıtma yok</option>
-                  <option value="gas">Doğalgaz</option>
-                  <option value="underfloor">Yerden ısıtma</option>
+                  <option value="gas">Kombi/Doğalgaz</option>
+                  <option value="underfloor">Yerden Isıtma</option>
+                  <option value="central">Merkezi Sistem</option>
+                  <option value="none">Isıtma Yok</option>
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Cephe Durumu</label>
+                <label className="block text-sm font-medium mb-1">Mutfak Tipi</label>
+                <select
+                  className="input-field"
+                  value={formData.isAmericanKitchen.toString()}
+                  onChange={(e) => handleInputChange('isAmericanKitchen', e.target.value === 'true')}
+                >
+                  <option value="false">Ayrı Mutfak</option>
+                  <option value="true">Amerikan Mutfak</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Otopark Durumu</label>
+                <select
+                  className="input-field"
+                  value={formData.hasParking.toString()}
+                  onChange={(e) => handleInputChange('hasParking', e.target.value === 'true')}
+                >
+                  <option value="true">Yeterli Otopark Alanı</option>
+                  <option value="false">Yetersiz Otopark veya Otopark Yok</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Dairenin Cephe Kalitesi</label>
                 <select
                   className="input-field"
                   value={formData.facade}
                   onChange={(e) => handleInputChange('facade', e.target.value)}
                 >
-                  <option value="terrible">Berbat cephe</option>
-                  <option value="bad">Kötü cephe</option>
-                  <option value="good">Ortalama cephe</option>
-                  <option value="excellent">Çok iyi cephe</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Gürültü Durumu</label>
-                <select
-                  className="input-field"
-                  value={formData.noiseLevel}
-                  onChange={(e) => handleInputChange('noiseLevel', e.target.value)}
-                >
-                  <option value="none">Gürültü yok</option>
-                  <option value="low">Az gürültü</option>
-                  <option value="high">Çok gürültü</option>
+                  <option value="excellent">Çok İyi (Güneş alma, estetik, ferah)</option>
+                  <option value="good">Ortalama (Standart)</option>
+                  <option value="bad">Kötü (Yetersiz ışık, bakımsızlık)</option>
+                  <option value="terrible">Berbat (Harap, ciddi sorunlu)</option>
                 </select>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Checkbox'lar ve Sonuç */}
+        {/* Ek Özellikler ve Sonuç */}
         <div className="space-y-6">
-          {/* Özellikler */}
+          {/* Ek Özellikler */}
           <div className="card">
             <h3 className="text-lg font-semibold mb-4">Ek Özellikler</h3>
             <div className="space-y-3">
               {[
-                { key: 'hasInsulation', label: 'Yalıtım var' },
-                { key: 'isEarthquakeCompliant', label: 'Deprem yönetmeliğine uygun' },
-                { key: 'isAmericanKitchen', label: 'Amerikan mutfak' },
-                { key: 'hasParking', label: 'Otopark var' },
-                { key: 'hasFiber', label: 'Fiber internet' },
-                { key: 'isFurnished', label: 'Eşyalı' },
-                { key: 'isGroundFloor', label: 'Zemin kat' },
-                { key: 'isEntranceFloor', label: 'Giriş katı' },
-                { key: 'isHighEntrance', label: 'Yüksek giriş' },
-                { key: 'isGardenFloor', label: 'Bahçe katı' },
+                { key: 'hasInsulation', label: 'Isı Yalıtımı Var' },
+                { key: 'isEarthquakeCompliant', label: 'Deprem Yönetmeliğine Uygun' },
+                { key: 'hasFiber', label: 'Fiber İnternet Altyapısı' },
+                { key: 'isFurnished', label: 'Ev Eşyalı' },
               ].map(({ key, label }) => (
                 <label key={key} className="flex items-center gap-3 cursor-pointer">
                   <input
@@ -540,6 +546,53 @@ export default function RentalCalculator() {
                   <span className="text-sm">{label}</span>
                 </label>
               ))}
+            </div>
+          </div>
+
+          {/* Güvenlik ve Çevre Durumu */}
+          <div className="card border-orange-200 bg-orange-50">
+            <h3 className="text-lg font-semibold mb-4 text-orange-800">Güvenlik ve Çevre Durumu</h3>
+            <div className="space-y-4">
+              <div className="p-3 bg-white rounded-lg border border-orange-200">
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={formData.isNeighborhoodSafe}
+                    onChange={(e) => handleInputChange('isNeighborhoodSafe', e.target.checked)}
+                    className="w-4 h-4 text-orange-600 rounded focus:ring-orange-500"
+                  />
+                  <div>
+                    <span className="text-sm font-medium">Mahalle Güvenli</span>
+                    <div className="text-xs text-gray-500">Güvensizse kira %30 daha düşük olur</div>
+                  </div>
+                </label>
+              </div>
+              <div className="p-3 bg-white rounded-lg border border-orange-200">
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={formData.areRoadsGood}
+                    onChange={(e) => handleInputChange('areRoadsGood', e.target.checked)}
+                    className="w-4 h-4 text-orange-600 rounded focus:ring-orange-500"
+                  />
+                  <div>
+                    <span className="text-sm font-medium">Yollar Düzgün</span>
+                    <div className="text-xs text-gray-500">Düzgün değilse kira %20 daha düşük olur</div>
+                  </div>
+                </label>
+              </div>
+              {(!formData.isNeighborhoodSafe || !formData.areRoadsGood) && (
+                <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                  <div className="text-sm text-red-800 font-medium">
+                    ⚠️ Uyarı: {!formData.isNeighborhoodSafe && !formData.areRoadsGood ? 
+                      'Her iki sorun da mevcut - Kira %50 düşük hesaplanacak' :
+                      !formData.isNeighborhoodSafe ? 
+                      'Güvenlik sorunu - Kira %30 düşük hesaplanacak' :
+                      'Yol sorunu - Kira %20 düşük hesaplanacak'
+                    }
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -555,18 +608,50 @@ export default function RentalCalculator() {
           {/* Sonuç */}
           {calculatedRent !== null && (
             <div className="card bg-gradient-to-r from-primary-50 to-blue-50 border-primary-200">
-              <h3 className="text-xl font-bold text-center mb-4">Hesaplanan Kira</h3>
+              <h3 className="text-xl font-bold text-center mb-4">Hesaplanan Adil Kira</h3>
               <div className="text-center">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 rounded-full mb-4">
+                  <Calculator className="w-8 h-8 text-primary-600" />
+                </div>
                 <div className="text-4xl font-bold text-primary-600 mb-2">
                   {calculatedRent.toLocaleString('tr-TR')} ₺
                 </div>
-                <p className="text-gray-600">/ aylık</p>
+                <p className="text-gray-600 mb-4">/ aylık</p>
+                
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">
+                  <span>Lüks Seviyesi:</span>
+                  <span className="font-medium">
+                    {formData.luxuryLevel === 'minimal' ? 'Minimal/Ekonomik' :
+                     formData.luxuryLevel === 'standard' ? 'Standart' :
+                     formData.luxuryLevel === 'premium' ? 'Premium/Lüks' : 'Ultra Lüks'}
+                  </span>
+                </div>
               </div>
               
-              <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                <p className="text-sm text-yellow-800">
-                  <strong>Not:</strong> Depozito tutarının aylık kiradan fazla olması için gerekli imzalar alınmalıdır.
-                </p>
+              <div className="mt-6 space-y-3">
+                <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                  <h4 className="font-medium text-blue-900 mb-2">📊 Hesaplama Detayları</h4>
+                  <div className="text-sm text-blue-800 space-y-1">
+                    <div>• Başlangıç kira: {LUXURY_LEVELS[formData.luxuryLevel].baseRent.toLocaleString('tr-TR')} ₺</div>
+                    <div>• Net metrekare etkisi: {((formData.netArea - LUXURY_LEVELS[formData.luxuryLevel].minArea) * LUXURY_LEVELS[formData.luxuryLevel].pricePerSqm).toLocaleString('tr-TR')} ₺</div>
+                    <div>• Minimum kira limiti: {LUXURY_LEVELS[formData.luxuryLevel].minRent.toLocaleString('tr-TR')} ₺</div>
+                    {(!formData.isNeighborhoodSafe || !formData.areRoadsGood) && (
+                      <div className="text-red-700 font-medium">
+                        • Güvenlik/Yol indirimi uygulandı: {
+                          !formData.isNeighborhoodSafe && !formData.areRoadsGood ? '%50' :
+                          !formData.isNeighborhoodSafe ? '%30' : '%20'
+                        }
+                      </div>
+                    )}
+                  </div>
+                </div>
+                
+                <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                  <p className="text-sm text-yellow-800">
+                    <strong>💡 Not:</strong> Bu hesaplama matematik formüllerimiz ve piyasa ortalamalarına dayalı bir tahmindir. 
+                    Gerçek piyasa koşulları farklılık gösterebilir. Depozito tutarının aylık kiradan fazla olması için yasal gereklilikler vardır.
+                  </p>
+                </div>
               </div>
             </div>
           )}
